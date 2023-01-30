@@ -16,7 +16,7 @@ export interface Options {
   indent?: string | number
 
   /** File extensions that this plugin handles. */
-  extensions?: string | string[]
+  extensions?: null | string | string[]
 
   /**
    * Formatter to use, either a name of the built-in formatter or function to
@@ -31,7 +31,8 @@ function normalizeIndent(indent?: Options['indent']) {
 }
 
 function normalizeExtensions(extensions?: Options['extensions']) {
-  if (extensions == null) return ['.json']
+  if (typeof extensions === 'undefined') return ['.json']
+  if (extensions == null) return null
   return Array.isArray(extensions) ? extensions : [extensions]
 }
 

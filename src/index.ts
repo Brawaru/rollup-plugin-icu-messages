@@ -1,6 +1,6 @@
 import { createFilter, dataToEsm } from '@rollup/pluginutils'
 import type { Plugin } from 'rollup'
-import { basename } from 'pathe'
+import { extname } from 'pathe'
 import {
   type MessageFormatElement,
   parse,
@@ -21,9 +21,15 @@ function isProbablyTransformedAlready(code: string) {
   return false // just invalid json
 }
 
-function icuMessages(options: Options = {}): Plugin {
+function icuMessages(options_: Options = {}): Plugin {
+  const { indent, extensions, format, ...options } = normalizeOptions(options_)
+
   const filter = createFilter(options.include, options.exclude)
-  const { indent, extensions, format } = normalizeOptions(options)
+
+  const filterByExtension =
+    extensions == null
+      ? (_id: string) => true
+      : (id: string) => extensions.includes(extname(id))
 
   let compileFunc: CompileFn | undefined
 
@@ -36,13 +42,12 @@ function icuMessages(options: Options = {}): Plugin {
     },
     transform(code, id) {
       if (compileFunc == null) {
-        throw new Error('Compiler function is missing after options hook call')
+        throw new TransformError(
+          'Compiler function is missing after options hook call',
+        )
       }
 
-      if (
-        !extensions.some((ext) => basename(id).endsWith(ext)) ||
-        !filter(id)
-      ) {
+      if (!filterByExtension(id) || !filter(id)) {
         return null
       }
 
