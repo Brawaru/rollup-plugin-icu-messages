@@ -1,10 +1,10 @@
 import { promisify } from 'util'
+import { fileURLToPath } from 'url'
 import { resolve } from 'import-meta-resolve'
 import glob_ from 'glob'
 import { basename, dirname, extname } from 'pathe'
 import type { CompileFn } from '@formatjs/cli-lib'
 import type { NormalizedOptions } from './options.js'
-import { fileURLToPath } from 'url'
 
 const glob = promisify(glob_)
 
