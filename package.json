@@ -4,7 +4,10 @@
   "description": "Automatically parses files containing ICU MessageFormat messages.",
   "keywords": [
     "i18n",
-    "icu-messageformat"
+    "icu-messageformat",
+    "rollup-plugin",
+    "rollup",
+    "plugin"
   ],
   "license": "MIT",
   "sideEffects": false,
