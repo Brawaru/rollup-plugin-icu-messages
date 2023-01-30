@@ -22,14 +22,9 @@ function isProbablyTransformedAlready(code: string) {
 }
 
 function icuMessages(options_: Options = {}): Plugin {
-  const { indent, extensions, format, ...options } = normalizeOptions(options_)
+  const { indent, format, ...options } = normalizeOptions(options_)
 
   const filter = createFilter(options.include, options.exclude)
-
-  const filterByExtension =
-    extensions == null || options.include != null
-      ? (_id: string) => true
-      : (id: string) => extensions.includes(extname(id))
 
   let compileFunc: CompileFn | undefined
 
@@ -47,9 +42,7 @@ function icuMessages(options_: Options = {}): Plugin {
         )
       }
 
-      if (!filterByExtension(id) || !filter(id)) {
-        return null
-      }
+      if (!filter(id)) return null
 
       let json: any
 
