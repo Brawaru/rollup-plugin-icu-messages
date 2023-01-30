@@ -41,7 +41,7 @@ describe('plugin', () => {
       err = err_
     }
 
-    expect(err).toMatchSnapshot()
+    expect(err).toHaveProperty('code', 'ROLLUP_ICU_FORMATTER_RESOLVE_ERROR')
   })
 
   it('should fail with pre-compiled JSON', async () => {
@@ -65,7 +65,7 @@ describe('plugin', () => {
       err = err_
     }
 
-    expect(err).toMatchSnapshot()
+    expect(err).toHaveProperty('pluginCode', 'ROLLUP_ICU_TRANSFORM_ERROR')
   })
 
   // TODO: add more tests

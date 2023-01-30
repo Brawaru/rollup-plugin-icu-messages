@@ -1,9 +1,5 @@
 // Vitest Snapshot v1
 
-exports[`plugin > should fail with pre-compiled JSON 1`] = `[Error: Cannot transform "d:\\Main\\Dev\\JavaScript\\nuxt-intl-workspace\\rollup-plugin-intl-messages\\test\\fixtures\\normal\\messages.json" due to SyntaxError: Unexpected token e in JSON at position 0. It appears that this file has already been transformed. Ensure that no other plugin parses this file. If you use \`@rollup/plugin-json\`, make sure to exclude through options all files that are transformed by this plugin.]`;
-
-exports[`plugin > should fail with unresolved formatter 1`] = `[Error: Cannot resolve built-in formatter "non-existent". Valid formatters are: crowdin, default, index, lokalise, simple, smartling, transifex]`;
-
 exports[`plugin > should generate bundle 1`] = `
 "const greeting = [
 	{
