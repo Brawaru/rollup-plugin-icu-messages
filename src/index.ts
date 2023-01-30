@@ -27,7 +27,7 @@ function icuMessages(options_: Options = {}): Plugin {
   const filter = createFilter(options.include, options.exclude)
 
   const filterByExtension =
-    extensions == null
+    extensions == null || options.include != null
       ? (_id: string) => true
       : (id: string) => extensions.includes(extname(id))
 

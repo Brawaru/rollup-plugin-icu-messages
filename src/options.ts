@@ -2,25 +2,39 @@ import type { CompileFn } from '@formatjs/cli-lib'
 import type { FilterPattern } from '@rollup/pluginutils'
 
 export interface Options {
-  /** Inclusion filter. */
+  /**
+   * Either a single glob string or regular expression, or an array of those,
+   * that the file ID must match for it to be transformed.
+   *
+   * When specified, {@link extensions} option becomes ineffective.
+   */
   include?: FilterPattern
 
-  /** Exclusion filter. */
+  /**
+   * Either a single glob string or regular expression, or an array of those,
+   * that the file ID must NOT match for it to be transformed.
+   */
   exclude?: FilterPattern
 
   /**
-   * Indentation used in the file.
+   * Indentation used in the output file.
    *
    * @default '\t'
    */
   indent?: string | number
 
-  /** File extensions that this plugin handles. */
+  /**
+   * File extensions that this plugin handles.
+   *
+   * Ineffective if {@link include} option is specified.
+   *
+   * Value of `null` disables the file extension check.
+   */
   extensions?: null | string | string[]
 
   /**
-   * Formatter to use, either a name of the built-in formatter or function to
-   * compile the messages.
+   * Either a name of the built-in formatter or function that accepts JSON
+   * object from the file and produces a record of messages keyed by their IDs.
    */
   format?: CompileFn | string
 }
