@@ -38,16 +38,12 @@ export async function resolveCompileFunction(
     )
   }
 
-  console.log('resolved index file', formattersIndexFile)
-
   if (formattersIndexFile != null) {
     const cwd = dirname(fileURLToPath(formattersIndexFile))
     const matchingFiles = await glob('*.js', {
       cwd,
       absolute: true,
     })
-
-    console.log('matching in', cwd, matchingFiles)
 
     for (const formatterFileName of matchingFiles) {
       const formatterName = basename(
