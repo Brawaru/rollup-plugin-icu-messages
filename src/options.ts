@@ -36,7 +36,7 @@ function normalizeIndent(indent?: Options['indent']) {
 export function normalizeOptions(options?: Options) {
   return {
     ...options,
-    include: options?.include ?? '*.json',
+    include: options?.include ?? '**/*.json',
     indent: normalizeIndent(options?.indent),
     format: options?.format ?? 'default',
   } satisfies Options
