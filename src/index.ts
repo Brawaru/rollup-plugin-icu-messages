@@ -29,7 +29,7 @@ function icuMessages(options_: Options = {}): Plugin {
   let compileFunc: CompileFn | undefined
 
   return {
-    name: 'intl-messages',
+    name: 'icu-messages',
     async options() {
       compileFunc = await resolveCompileFunction(format)
 
