@@ -21,7 +21,8 @@ function isProbablyTransformedAlready(code: string) {
 }
 
 function icuMessages(options_: Options = {}): Plugin {
-  const { indent, format, ...options } = normalizeOptions(options_)
+  const { indent, format, experimental, ...options } =
+    normalizeOptions(options_)
 
   const filter = createFilter(options.include, options.exclude)
 
@@ -33,6 +34,21 @@ function icuMessages(options_: Options = {}): Plugin {
       compileFunc = await resolveCompileFunction(format)
 
       return null
+    },
+    async buildStart(options) {
+      if (!experimental.wrapJSONPlugins) return
+
+      const { pluginWrappers } = await import('./pluginWrappers.js')
+
+      for (const [pluginName, wrap] of Object.entries(pluginWrappers)) {
+        const plugin = options.plugins.find(
+          (plugin) => plugin.name === pluginName,
+        )
+
+        if (plugin == null) continue
+
+        wrap(plugin, filter)
+      }
     },
     transform(code, id) {
       if (compileFunc == null) {

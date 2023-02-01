@@ -68,5 +68,31 @@ describe('plugin', () => {
     expect(err).toHaveProperty('pluginCode', 'ROLLUP_ICU_TRANSFORM_ERROR')
   })
 
+  it('should prevent json plugins if specified', async () => {
+    const { generate } = await rollup({
+      input: [
+        resolve(
+          dirname(fileURLToPath(import.meta.url)),
+          'fixtures/with-json/input.mjs',
+        ),
+      ],
+      plugins: [
+        json(),
+        icuMessages({
+          include: '**/*.messages.json',
+          format: 'crowdin',
+          experimental: { wrapJSONPlugins: true },
+        }),
+      ],
+    })
+
+    const { output } = await generate({
+      format: 'esm',
+    })
+
+    expect(output).toHaveLength(1)
+    expect(output[0]?.code).toMatchSnapshot()
+  })
+
   // TODO: add more tests
 })
