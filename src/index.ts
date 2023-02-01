@@ -1,6 +1,5 @@
 import { createFilter, dataToEsm } from '@rollup/pluginutils'
 import type { Plugin } from 'rollup'
-import { extname } from 'pathe'
 import {
   type MessageFormatElement,
   parse,
