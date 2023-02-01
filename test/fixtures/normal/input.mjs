@@ -1,4 +1,4 @@
-import messages from './messages.json'
+import messages from './en.messages.json'
 
 export default function example() {
   // eslint-disable-next-line no-console

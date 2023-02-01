@@ -67,7 +67,7 @@ function normalizeExperimentalOptions(options?: Options['experimental']) {
 export function normalizeOptions(options?: Options) {
   return {
     ...options,
-    include: options?.include ?? '**/*.json',
+    include: options?.include ?? '**/*.messages.json',
     indent: normalizeIndent(options?.indent),
     format: options?.format ?? 'default',
     experimental: normalizeExperimentalOptions(options?.experimental),

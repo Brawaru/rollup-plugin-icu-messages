@@ -79,7 +79,6 @@ describe('plugin', () => {
       plugins: [
         json(),
         icuMessages({
-          include: '**/*.messages.json',
           format: 'crowdin',
           experimental: { wrapJSONPlugins: true },
         }),
