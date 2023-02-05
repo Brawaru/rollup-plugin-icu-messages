@@ -3,8 +3,8 @@ import { dirname, resolve } from 'pathe'
 import { rollup } from 'rollup'
 import json from '@rollup/plugin-json'
 import { describe, expect, it } from 'vitest'
-import { AnyMessage, icuMessages } from '..'
 import TOML from '@ltd/j-toml'
+import { AnyMessage, icuMessages } from '..'
 
 describe('plugin', () => {
   it('should generate bundle', async () => {
