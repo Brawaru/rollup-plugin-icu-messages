@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@formatjs/cli-lib': ^5.1.12
   '@formatjs/icu-messageformat-parser': ^2.1.14
+  '@ltd/j-toml': ^1.38.0
   '@nuxtjs/eslint-config-typescript': ^12.0.0
   '@rollup/plugin-json': ^6.0.0
   '@rollup/pluginutils': ^5.0.2
@@ -31,6 +32,7 @@ dependencies:
   rollup: 3.11.0
 
 devDependencies:
+  '@ltd/j-toml': 1.38.0
   '@nuxtjs/eslint-config-typescript': 12.0.0_7uibuqfxkfaozanbtbziikiqje
   '@rollup/plugin-json': 6.0.0_rollup@3.11.0
   '@types/glob': 8.0.1
@@ -606,6 +608,10 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
+    dev: true
+
+  /@ltd/j-toml/1.38.0:
+    resolution: {integrity: sha512-lYtBcmvHustHQtg4X7TXUu1Xa/tbLC3p2wLvgQI+fWVySguVZJF60Snxijw5EiohumxZbR10kWYFFebh1zotiw==}
     dev: true
 
   /@nodelib/fs.scandir/2.1.5:

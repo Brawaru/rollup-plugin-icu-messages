@@ -4,6 +4,7 @@ import { rollup } from 'rollup'
 import json from '@rollup/plugin-json'
 import { describe, expect, it } from 'vitest'
 import { AnyMessage, icuMessages } from '..'
+import TOML from '@ltd/j-toml'
 
 describe('plugin', () => {
   it('should generate bundle', async () => {
@@ -115,6 +116,33 @@ describe('plugin', () => {
           },
           experimental: {
             wrapJSONPlugins: true,
+          },
+        }),
+      ],
+    })
+
+    const { output } = await generate({
+      format: 'esm',
+    })
+
+    expect(output).toHaveLength(1)
+    expect(output[0]?.code).toMatchSnapshot()
+  })
+
+  it('should parse TOML when specified', async () => {
+    const { generate } = await rollup({
+      input: [
+        resolve(
+          dirname(fileURLToPath(import.meta.url)),
+          'fixtures/toml/input.mjs',
+        ),
+      ],
+      plugins: [
+        icuMessages({
+          include: '**/*.messages.toml',
+          format: 'crowdin',
+          parse(code) {
+            return TOML.parse(code)
           },
         }),
       ],

@@ -2,7 +2,7 @@ import { createFilter, dataToEsm } from '@rollup/pluginutils'
 import type { Plugin } from 'rollup'
 import {
   type MessageFormatElement,
-  parse,
+  parse as parseMessage,
 } from '@formatjs/icu-messageformat-parser'
 import type { CompileFn } from '@formatjs/cli-lib'
 import { normalizeOptions, type Options } from './options.js'
@@ -22,7 +22,7 @@ function isProbablyTransformedAlready(code: string) {
 }
 
 function icuMessages(options_: Options = {}): Plugin {
-  const { indent, format, experimental, ...options } =
+  const { indent, format, parse, experimental, ...options } =
     normalizeOptions(options_)
 
   const filter = createFilter(options.include, options.exclude)
@@ -62,10 +62,10 @@ function icuMessages(options_: Options = {}): Plugin {
 
       if (!filter(id)) return null
 
-      let json: any
+      let inputValue: any
 
       try {
-        json = JSON.parse(code)
+        inputValue = parse(code, id)
       } catch (cause) {
         let msg = `Cannot transform "${id}" due to ${String(cause)}`
 
@@ -79,7 +79,7 @@ function icuMessages(options_: Options = {}): Plugin {
 
       let messages: unknown
       try {
-        messages = compileFunc(json)
+        messages = compileFunc(inputValue)
       } catch (cause) {
         throw new TransformError(
           `Cannot compile the messages using the selected formatter: ${String(
@@ -103,7 +103,7 @@ function icuMessages(options_: Options = {}): Plugin {
         }
 
         try {
-          out[key] = parse(message, getParserOptions(key))
+          out[key] = parseMessage(message, getParserOptions(key))
         } catch (cause) {
           throw new TransformError(
             `Cannot parse message under key "${key}": ${String(cause)}`,

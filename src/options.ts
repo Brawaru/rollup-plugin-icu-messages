@@ -35,6 +35,23 @@ export interface Options {
   format?: CompileFn | string
 
   /**
+   * Function that accepts the file contents and parses it to a JavaScript value
+   * that will be passed to the {@link format} function (or resolved built-in
+   * formatter).
+   *
+   * This can come in handy when you don't use standard JSON, but something like
+   * JSON5, YAML or TOML. Other plugins that process files of these formats must
+   * be configured to exclude files that should be transformed by this plugin,
+   * otherwise the provided `code` will be raw JavaScript.
+   *
+   * @default (code) => JSON.parse(code)
+   * @param code Raw contents of the file that need to be parsed.
+   * @param id ID of the file.
+   * @returns The result of parsing the code.
+   */
+  parse?(code: string, id: string): void
+
+  /**
    * An object which keys are message IDs and values are parsing options for
    * those messages.
    */
@@ -78,6 +95,7 @@ export function normalizeOptions(options?: Options) {
     indent: normalizeIndent(options?.indent),
     format: options?.format ?? 'default',
     experimental: normalizeExperimentalOptions(options?.experimental),
+    parse: options?.parse ?? ((code) => JSON.parse(code)),
   } satisfies Options
 }
 

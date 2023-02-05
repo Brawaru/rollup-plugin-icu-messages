@@ -70,6 +70,33 @@ export { example as default };
 "
 `;
 
+exports[`plugin > should parse TOML when specified 1`] = `
+"const greeting = [
+	{
+		type: 0,
+		value: \\"Hello, \\"
+	},
+	{
+		type: 1,
+		value: \\"name\\"
+	},
+	{
+		type: 0,
+		value: \\"!\\"
+	}
+];
+var messages = {
+	greeting: greeting
+};
+
+function example() {
+  return messages.greeting
+}
+
+export { example as default };
+"
+`;
+
 exports[`plugin > should prevent json plugins if specified 1`] = `
 "var type = 0;
 var target = \\"World\\";
