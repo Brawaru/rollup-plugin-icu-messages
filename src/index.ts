@@ -7,6 +7,7 @@ import {
 import type { CompileFn } from '@formatjs/cli-lib'
 import { normalizeOptions, type Options } from './options.js'
 import { resolveCompileFunction } from './compiling.js'
+import { createOptionsResolver } from './parserOptions.js'
 
 class TransformError extends Error {
   public readonly code = 'ROLLUP_ICU_TRANSFORM_ERROR'
@@ -25,6 +26,8 @@ function icuMessages(options_: Options = {}): Plugin {
     normalizeOptions(options_)
 
   const filter = createFilter(options.include, options.exclude)
+
+  const getParserOptions = createOptionsResolver(options.parserOptions)
 
   let compileFunc: CompileFn | undefined
 
@@ -100,7 +103,7 @@ function icuMessages(options_: Options = {}): Plugin {
         }
 
         try {
-          out[key] = parse(message)
+          out[key] = parse(message, getParserOptions(key))
         } catch (cause) {
           throw new TransformError(
             `Cannot parse message under key "${key}": ${String(cause)}`,
@@ -119,4 +122,6 @@ function icuMessages(options_: Options = {}): Plugin {
   }
 }
 
-export default icuMessages
+export { AnyMessage } from './parserOptions.js'
+
+export { icuMessages }

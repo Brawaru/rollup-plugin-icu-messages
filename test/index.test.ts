@@ -3,7 +3,7 @@ import { dirname, resolve } from 'pathe'
 import { rollup } from 'rollup'
 import json from '@rollup/plugin-json'
 import { describe, expect, it } from 'vitest'
-import icuMessages from '..'
+import { AnyMessage, icuMessages } from '..'
 
 describe('plugin', () => {
   it('should generate bundle', async () => {
@@ -81,6 +81,41 @@ describe('plugin', () => {
         icuMessages({
           format: 'crowdin',
           experimental: { wrapJSONPlugins: true },
+        }),
+      ],
+    })
+
+    const { output } = await generate({
+      format: 'esm',
+    })
+
+    expect(output).toHaveLength(1)
+    expect(output[0]?.code).toMatchSnapshot()
+  })
+
+  it('respects parser options', async () => {
+    const { generate } = await rollup({
+      input: [
+        resolve(
+          dirname(fileURLToPath(import.meta.url)),
+          'fixtures/tagless-parsing/input.mjs',
+        ),
+      ],
+      plugins: [
+        json(),
+        icuMessages({
+          format: 'crowdin',
+          parserOptions: {
+            [AnyMessage]: {
+              ignoreTag: true,
+            },
+            'invalid-key': {
+              ignoreTag: false,
+            },
+          },
+          experimental: {
+            wrapJSONPlugins: true,
+          },
         }),
       ],
     })

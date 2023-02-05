@@ -1,5 +1,6 @@
 import type { CompileFn } from '@formatjs/cli-lib'
 import type { FilterPattern } from '@rollup/pluginutils'
+import type { MessagesParsingOptions } from './parserOptions.js'
 
 export interface Options {
   /**
@@ -32,6 +33,12 @@ export interface Options {
    * @default 'default'
    */
   format?: CompileFn | string
+
+  /**
+   * An object which keys are message IDs and values are parsing options for
+   * those messages.
+   */
+  parserOptions?: MessagesParsingOptions
 
   /**
    * Unstable options that should be used with caution.

@@ -1,5 +1,48 @@
 // Vitest Snapshot v1
 
+exports[`plugin > respects parser options 1`] = `
+"const introduction = [
+	{
+		type: 0,
+		value: \\"Hello, \\"
+	},
+	{
+		type: 1,
+		value: \\"name\\"
+	},
+	{
+		type: 0,
+		value: \\"! Press <Enter> to continue.\\"
+	}
+];
+var messages = {
+	introduction: introduction,
+	\\"invalid-key\\": [
+	{
+		type: 8,
+		value: \\"strong\\",
+		children: [
+			{
+				type: 0,
+				value: \\"Warning\\"
+			}
+		]
+	},
+	{
+		type: 0,
+		value: \\": Invalid key pressed\\"
+	}
+]
+};
+
+function example() {
+  return messages.introduction
+}
+
+export { example as default };
+"
+`;
+
 exports[`plugin > should generate bundle 1`] = `
 "const greeting = [
 	{
@@ -20,8 +63,7 @@ var messages = {
 };
 
 function example() {
-  // eslint-disable-next-line no-console
-  console.log(messages);
+  return messages
 }
 
 export { example as default };
