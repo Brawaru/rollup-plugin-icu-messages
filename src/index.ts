@@ -77,8 +77,6 @@ function icuMessages(options_: Options = {}): Plugin {
         throw new TransformError(msg, { cause })
       }
 
-      const out: Record<string, MessageFormatElement[]> = Object.create(null)
-
       let messages: unknown
       try {
         messages = compileFunc(json)
@@ -96,6 +94,8 @@ function icuMessages(options_: Options = {}): Plugin {
           'Value returned by the formatter is not an object',
         )
       }
+
+      const out: Record<string, MessageFormatElement[]> = Object.create(null)
 
       for (const [key, message] of Object.entries(messages)) {
         if (typeof message !== 'string') {
