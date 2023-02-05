@@ -156,5 +156,9 @@ describe('plugin', () => {
     expect(output[0]?.code).toMatchSnapshot()
   })
 
+  it('exposes filter in public API', () => {
+    expect(icuMessages().api).toHaveProperty('filter')
+  })
+
   // TODO: add more tests
 })

@@ -8,6 +8,7 @@ import type { CompileFn } from '@formatjs/cli-lib'
 import { normalizeOptions, type Options } from './options.js'
 import { resolveCompileFunction } from './compiling.js'
 import { createOptionsResolver } from './parserOptions.js'
+import type { API } from './types.js'
 
 class TransformError extends Error {
   public readonly code = 'ROLLUP_ICU_TRANSFORM_ERROR'
@@ -33,6 +34,7 @@ function icuMessages(options_: Options = {}): Plugin {
 
   return {
     name: 'icu-messages',
+    api: { filter } satisfies API,
     async options() {
       compileFunc = await resolveCompileFunction(format)
 
