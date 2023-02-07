@@ -17,6 +17,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
+    },
+    "./wrap-plugins": {
+      "types": "./dist/wrapPlugins.d.ts",
+      "import": "./dist/wrapPlugins.mjs",
+      "require": "./dist/wrapPlugins.cjs"
     }
   },
   "main": "./dist/index.cjs",

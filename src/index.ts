@@ -8,7 +8,8 @@ import type { CompileFn } from '@formatjs/cli-lib'
 import { normalizeOptions, type Options } from './options.js'
 import { resolveCompileFunction } from './compiling.js'
 import { createOptionsResolver } from './parserOptions.js'
-import type { API } from './types.js'
+import type { API } from './api.js'
+import { basePluginName } from './shared.js'
 
 class TransformError extends Error {
   public readonly code = 'ROLLUP_ICU_TRANSFORM_ERROR'
@@ -23,8 +24,7 @@ function isProbablyTransformedAlready(code: string) {
 }
 
 function icuMessages(options_: Options = {}): Plugin {
-  const { indent, format, parse, experimental, ...options } =
-    normalizeOptions(options_)
+  const { indent, format, parse, ...options } = normalizeOptions(options_)
 
   const filter = createFilter(options.include, options.exclude)
 
@@ -33,27 +33,12 @@ function icuMessages(options_: Options = {}): Plugin {
   let compileFunc: CompileFn | undefined
 
   return {
-    name: 'icu-messages',
+    name: basePluginName,
     api: { filter } satisfies API,
     async options() {
       compileFunc = await resolveCompileFunction(format)
 
       return null
-    },
-    async buildStart(options) {
-      if (!experimental.wrapJSONPlugins) return
-
-      const { pluginWrappers } = await import('./pluginWrappers.js')
-
-      for (const [pluginName, wrap] of Object.entries(pluginWrappers)) {
-        const plugin = options.plugins.find(
-          (plugin) => plugin.name === pluginName,
-        )
-
-        if (plugin == null) continue
-
-        wrap(plugin, filter)
-      }
     },
     transform(code, id) {
       if (compileFunc == null) {

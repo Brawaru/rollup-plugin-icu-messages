@@ -5,6 +5,7 @@ import json from '@rollup/plugin-json'
 import { describe, expect, it } from 'vitest'
 import TOML from '@ltd/j-toml'
 import { AnyMessage, icuMessages } from '..'
+import { icuMessagesWrapPlugins } from '../dist/wrapPlugins'
 
 describe('plugin', () => {
   it('should generate bundle', async () => {
@@ -81,8 +82,8 @@ describe('plugin', () => {
         json(),
         icuMessages({
           format: 'crowdin',
-          experimental: { wrapJSONPlugins: true },
         }),
+        icuMessagesWrapPlugins(),
       ],
     })
 
@@ -114,10 +115,8 @@ describe('plugin', () => {
               ignoreTag: false,
             },
           },
-          experimental: {
-            wrapJSONPlugins: true,
-          },
         }),
+        icuMessagesWrapPlugins(),
       ],
     })
 

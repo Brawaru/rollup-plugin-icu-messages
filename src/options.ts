@@ -56,36 +56,11 @@ export interface Options {
    * those messages.
    */
   parserOptions?: MessagesParsingOptions
-
-  /**
-   * Unstable options that should be used with caution.
-   *
-   * @alpha
-   */
-  experimental?: {
-    /**
-     * Whether to wrap all known JSON plugins to prevent them from transforming
-     * the files that would be handled by this plugin.
-     *
-     * Some plugins, like Vite's JSON plugin do not provide configuration
-     * options to exclude files, so this option might be necessary.
-     *
-     * @default false // No wrapping.
-     * @alpha
-     */
-    wrapJSONPlugins?: boolean
-  }
 }
 
 function normalizeIndent(indent?: Options['indent']) {
   if (indent == null) return '\t'
   return typeof indent === 'number' ? ' '.repeat(indent) : indent
-}
-
-function normalizeExperimentalOptions(options?: Options['experimental']) {
-  return {
-    wrapJSONPlugins: options?.wrapJSONPlugins ?? false,
-  } satisfies Options['experimental']
 }
 
 export function normalizeOptions(options?: Options) {
@@ -94,7 +69,6 @@ export function normalizeOptions(options?: Options) {
     include: options?.include ?? '**/*.messages.json',
     indent: normalizeIndent(options?.indent),
     format: options?.format ?? 'default',
-    experimental: normalizeExperimentalOptions(options?.experimental),
     parse: options?.parse ?? ((code) => JSON.parse(code)),
   } satisfies Options
 }
