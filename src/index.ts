@@ -111,4 +111,4 @@ function icuMessages(options_: Options = {}): Plugin {
 
 export { AnyMessage } from './parserOptions.js'
 
-export { icuMessages }
+export { icuMessages, API as ICUMessagesPluginAPI }
