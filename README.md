@@ -1,6 +1,6 @@
 # rollup-plugin-icu-messages
 
-> Automatically parses files containing ICU MessageFormat messages.
+> Transform files containing ICU MessageFormat messages.
 
 ## Summary
 

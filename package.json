@@ -1,7 +1,7 @@
 {
   "name": "@braw/rollup-plugin-icu-messages",
   "version": "0.0.0",
-  "description": "Automatically parses files containing ICU MessageFormat messages.",
+  "description": "Transform files containing ICU MessageFormat messages.",
   "keywords": [
     "i18n",
     "icu-messageformat",
