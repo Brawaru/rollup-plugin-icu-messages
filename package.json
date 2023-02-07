@@ -19,9 +19,9 @@
       "require": "./dist/index.cjs"
     },
     "./wrap-plugins": {
-      "types": "./dist/wrapPlugins.d.ts",
-      "import": "./dist/wrapPlugins.mjs",
-      "require": "./dist/wrapPlugins.cjs"
+      "types": "./dist/wrap-plugins.d.ts",
+      "import": "./dist/wrap-plugins.mjs",
+      "require": "./dist/wrap-plugins.cjs"
     }
   },
   "main": "./dist/index.cjs",

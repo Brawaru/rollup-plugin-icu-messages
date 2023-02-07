@@ -1,6 +1,6 @@
 import type { CompileFn } from '@formatjs/cli-lib'
 import type { FilterPattern } from '@rollup/pluginutils'
-import type { MessagesParsingOptions } from './parserOptions.js'
+import type { MessagesParsingOptions } from './parser-options.js'
 
 export interface Options {
   /**

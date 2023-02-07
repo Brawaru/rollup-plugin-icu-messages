@@ -7,7 +7,7 @@ import {
 import type { CompileFn } from '@formatjs/cli-lib'
 import { normalizeOptions, type Options } from './options.js'
 import { resolveCompileFunction } from './compiling.js'
-import { createOptionsResolver } from './parserOptions.js'
+import { createOptionsResolver } from './parser-options.js'
 import type { API } from './api.js'
 import { basePluginName } from './shared.js'
 
@@ -109,6 +109,6 @@ function icuMessages(options_: Options = {}): Plugin {
   }
 }
 
-export { AnyMessage } from './parserOptions.js'
+export { AnyMessage } from './parser-options.js'
 
 export { icuMessages, API as ICUMessagesPluginAPI }

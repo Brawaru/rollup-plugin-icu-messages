@@ -5,7 +5,7 @@ import json from '@rollup/plugin-json'
 import { describe, expect, it } from 'vitest'
 import TOML from '@ltd/j-toml'
 import { AnyMessage, icuMessages } from '..'
-import { icuMessagesWrapPlugins } from '../dist/wrapPlugins'
+import { icuMessagesWrapPlugins } from '../dist/wrap-plugins'
 
 describe('plugin', () => {
   it('should generate bundle', async () => {
