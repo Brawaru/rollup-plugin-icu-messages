@@ -2,6 +2,14 @@
   "name": "@braw/rollup-plugin-icu-messages",
   "version": "0.0.0",
   "description": "Transform files containing ICU MessageFormat messages.",
+  "author": {
+    "name": "Alexander 'Brawaru' Sorokin",
+    "url": "https://github.com/brawaru"
+  },
+  "repository": "github:Brawaru/rollup-plugin-icu-messages",
+  "bugs": "https://github.com/Brawaru/rollup-plugin-icu-messages/issues",
+  "homepage": "https://github.com/Brawaru/rollup-plugin-icu-messages#readme",
+  "funding": "https://github.com/Brawaru/Brawaru/blob/main/SUPPORT.md",
   "keywords": [
     "i18n",
     "icu-messageformat",
