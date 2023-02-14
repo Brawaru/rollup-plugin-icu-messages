@@ -5,9 +5,13 @@ import {
   parse as parseMessage,
 } from '@formatjs/icu-messageformat-parser'
 import type { CompileFn } from '@formatjs/cli-lib'
+import { basename } from 'pathe'
 import { normalizeOptions, type Options } from './options.js'
 import { resolveCompileFunction } from './compiling.js'
-import { createOptionsResolver } from './parser-options.js'
+import {
+  createOptionsResolver,
+  type CustomOptionsResolver,
+} from './parser-options.js'
 import type { API } from './api.js'
 import { basePluginName } from './shared.js'
 
@@ -17,18 +21,30 @@ class TransformError extends Error {
 
 function isProbablyTransformedAlready(code: string) {
   const trimmed = code.trim()
+
   for (const badToken of ['const', 'let', 'var', 'export', 'import']) {
     if (trimmed.startsWith(badToken)) return true
   }
+
   return false // just invalid json
 }
+
+const defaultOptionsResolver: CustomOptionsResolver =
+  function localeFromName() {
+    return {
+      locale: new Intl.Locale(basename(this.moduleId).split('.')[0]),
+    }
+  }
 
 function icuMessages(options_: Options = {}): Plugin {
   const { indent, format, parse, ...options } = normalizeOptions(options_)
 
   const filter = createFilter(options.include, options.exclude)
 
-  const getParserOptions = createOptionsResolver(options.parserOptions)
+  const getParserOptions = createOptionsResolver(
+    options.parserOptions,
+    defaultOptionsResolver,
+  )
 
   let compileFunc: CompileFn | undefined
 
@@ -64,7 +80,7 @@ function icuMessages(options_: Options = {}): Plugin {
         throw new TransformError(msg, { cause })
       }
 
-      let messages: unknown
+      let messages: Record<string, string>
       try {
         messages = compileFunc(inputValue)
       } catch (cause) {
@@ -90,7 +106,7 @@ function icuMessages(options_: Options = {}): Plugin {
         }
 
         try {
-          out[key] = parseMessage(message, getParserOptions(key))
+          out[key] = parseMessage(message, getParserOptions(id, key, messages))
         } catch (cause) {
           throw new TransformError(
             `Cannot parse message under key "${key}": ${String(cause)}`,

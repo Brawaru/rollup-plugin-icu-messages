@@ -52,8 +52,24 @@ export interface Options {
   parse?(code: string, id: string): void
 
   /**
-   * An object which keys are message IDs and values are parsing options for
-   * those messages.
+   * An object whose keys are message IDs and whose values are either parsing
+   * options for those messages or a resolver function that generates parsing
+   * options based on contextual information (such as module ID, message ID, and
+   * all messages).
+   *
+   * By default only `locale` is deducted using the file name:
+   *
+   * ```js
+   * function localeFromModuleId() {
+   *   return {
+   *     locale: new Intl.Locale(
+   *       pathe.basename(this.moduleId).split('.')[0],
+   *     ),
+   *   }
+   * }
+   * ```
+   *
+   * @default localeFromModuleId
    */
   parserOptions?: MessagesParsingOptions
 }

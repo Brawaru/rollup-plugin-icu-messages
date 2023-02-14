@@ -57,7 +57,7 @@ The following options are supported:
 - `indent` (optional, default: `'\t'`) — string or a number of spaces used for indentation.
 - `parse` (optional, default: `(code) => JSON.parse(code)`) — a function that takes the file content and ID, parses it and returns the JS object to pass to the `format` function.
 - `format` (optional, default: `default`) — either a string with the name of the built-in formatter, or a function that accepts parsed file contents (using the `parse` function) and produces a record of messages, keyed by their IDs. For a list of built-in formatters, [see the @formatjs/cli documentation →](https://formatjs.io/docs/tooling/cli#builtin-formatters).
-- `parserOptions` (optional, default: `undefined`) — an object whose keys are message IDs and values are parsing options for those messages.
+- `parserOptions` (optional, default: `undefined`) — an object whose keys are message IDs and whose values are either parsing options for those messages or a function that generates parsing options based on contextual information (such as module ID, message ID, and all messages).
 
 ## Usage with other JSON plugins
 
