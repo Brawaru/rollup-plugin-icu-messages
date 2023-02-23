@@ -188,8 +188,8 @@ export function icuMessagesWrapPluginsVite(
   const name = `${basePluginName}:plugins-wrapper-vite`
   return {
     name,
-    configureServer({ config }) {
-      wrappingImpl(config.plugins, options, (logEntry) => {
+    configResolved({ plugins }) {
+      wrappingImpl(plugins, options, (logEntry) => {
         // eslint-disable-next-line no-console
         console.warn(`[${name}] ${logEntry.code}: ${logEntry.message}`)
       })
