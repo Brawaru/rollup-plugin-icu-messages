@@ -1,5 +1,5 @@
 import { promisify } from 'util'
-import { fileURLToPath } from 'url'
+import { fileURLToPath, pathToFileURL } from 'url'
 import { resolve } from 'import-meta-resolve'
 import glob_ from 'glob'
 import { basename, dirname, extname } from 'pathe'
@@ -53,7 +53,10 @@ export async function resolveCompileFunction(
 
       if (formatterFileName === 'index') continue
 
-      defaultFormatters.set(formatterName, formatterFileName)
+      defaultFormatters.set(
+        formatterName,
+        String(pathToFileURL(formatterFileName)),
+      )
     }
   }
 
