@@ -65,7 +65,7 @@ Your configuration may already include a plugin that handles JSON or other files
 
 You can configure this plugin to include files with other extensions and store your messages in, e.g. `.messages` files. Just change `options.include` to `**/*.messages` in this case.
 
-Alternatively you can use a separate plugin in this package — `icuMessagesWrapPlugins`, exported from `@braw/rollup-plugin-icu-messages/wrap-plugins`.
+Alternatively you can use a separate plugin in this package — `icuMessagesWrapPlugins`, exported from `@braw/rollup-plugin-icu-messages/wrap-plugins`. If you use Vite, there is also `icuMessagesWrapPluginsVite`.
 
 <details>
 <summary>Example configuration</summary>

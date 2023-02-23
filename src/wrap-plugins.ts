@@ -1,48 +1,52 @@
-import type { ObjectHook, Plugin, RollupWarning, TransformHook } from 'rollup'
+import type { ObjectHook, Plugin, TransformHook } from 'rollup'
+import type { Plugin as VitePlugin } from 'vite'
 import { isAPI } from './api.js'
 import { basePluginName } from './shared.js'
 
 export type FilterFunction = (id: string) => boolean
 
-export type PluginWrapper = (plugin: Plugin, filter: FilterFunction) => void
+export type PluginWrapper<PluginType> = (
+  plugin: PluginType,
+  filter: FilterFunction,
+) => void
 
-type WrappersMap = Record<string, PluginWrapper>
+type WrappersMap<PluginType> = Record<string, PluginWrapper<PluginType>>
 
-interface Options {
+interface Options<PluginType> {
   /** Whether to extend defaults. */
   extendDefaults?: boolean
 
   /** Map of wrappers. */
-  wrappers?: WrappersMap
+  wrappers?: WrappersMap<PluginType>
 }
 
-type WarningFunction = (warning: RollupWarning) => void
+type WarningFunction = (entry: { code: string; message: string }) => void
 
 class APIMissmatchError extends Error {
   public readonly code = 'ROLLUP_ICU_WRAP_API_MISMATCH'
 }
 
 function collectFilters(
-  plugins: Plugin[],
+  plugins: readonly Plugin[] | undefined | null,
   onWarn?: WarningFunction,
 ): FilterFunction[] {
   const filters: FilterFunction[] = []
 
-  for (let i = 0, l = plugins.length; i < l; i++) {
-    const plugin = plugins[i]
+  if (Array.isArray(plugins)) {
+    for (const plugin of plugins) {
+      if (plugin.name === basePluginName) {
+        if (!isAPI(plugin.api)) {
+          onWarn?.(
+            new APIMissmatchError(
+              'Skipped a plugin which matches our name, but has invalid API',
+            ),
+          )
 
-    if (plugin.name === basePluginName) {
-      if (!isAPI(plugin.api)) {
-        onWarn?.(
-          new APIMissmatchError(
-            'Skipped a plugin which matches our name, but has invalid API',
-          ),
-        )
+          continue
+        }
 
-        continue
+        filters.push(plugin.api.filter)
       }
-
-      filters.push(plugin.api.filter)
     }
   }
 
@@ -55,7 +59,9 @@ function createMegaFilter(filters: FilterFunction[]): FilterFunction {
   }
 }
 
-type WrapperQueryFunction = (pluginName: string) => PluginWrapper | undefined
+type WrapperQueryFunction<PluginType> = (
+  pluginName: string,
+) => PluginWrapper<PluginType> | undefined
 
 class PluginIneffectiveError extends Error {
   public readonly code = 'ROLLUP_ICU_WRAP_USELESS'
@@ -71,7 +77,10 @@ function isEmptyObject(value?: Record<string, any>): boolean {
   return true
 }
 
-export function wrapTransform(plugin: Plugin, filter: (id: string) => boolean) {
+export function wrapTransform(
+  plugin: Pick<Plugin, 'transform'>,
+  filter: (id: string) => boolean,
+) {
   const originalTransform = plugin.transform
   if (originalTransform != null) {
     if (typeof originalTransform === 'object') {
@@ -94,11 +103,18 @@ export function wrapTransform(plugin: Plugin, filter: (id: string) => boolean) {
   }
 }
 
-function createWrapResolver(
-  wrappers?: WrappersMap,
-  inheritDefaults = true,
+function createWrapResolver<
+  PluginType extends InheritsDefaults extends true
+    ? Pick<Plugin, 'transform'>
+    : object,
+  InheritsDefaults extends boolean = true,
+>(
+  wrappers?: WrappersMap<PluginType>,
+  inheritDefaults?: InheritsDefaults,
   onWarn?: WarningFunction,
-): WrapperQueryFunction {
+): WrapperQueryFunction<PluginType> {
+  inheritDefaults ??= true as InheritsDefaults
+
   if (!inheritDefaults && isEmptyObject(wrappers)) {
     onWarn?.(
       new PluginIneffectiveError(
@@ -111,7 +127,7 @@ function createWrapResolver(
     }
   }
 
-  const defaults: WrappersMap | null = inheritDefaults
+  const defaults: WrappersMap<PluginType> | null = inheritDefaults
     ? {
         json: wrapTransform,
         'vite:json': wrapTransform,
@@ -123,23 +139,60 @@ function createWrapResolver(
   }
 }
 
-export function icuMessagesWrapPlugins(options?: Options): Plugin {
+class PluginsFieldEmpty extends Error {
+  public readonly code = 'ROLLUP_ICU_WRAP_NO_PLUGINS'
+}
+
+function wrappingImpl<PluginType extends Plugin>(
+  plugins: readonly PluginType[],
+  options: Options<PluginType> | undefined,
+  onWarn: WarningFunction,
+) {
+  if (plugins == null || (Array.isArray(plugins) && plugins.length === 0)) {
+    onWarn(
+      new PluginsFieldEmpty(
+        'Your Rollup configuration does not include any plugins',
+      ),
+    )
+
+    return
+  }
+
+  const resolveWrapper = createWrapResolver(
+    options?.wrappers,
+    options?.extendDefaults,
+    onWarn,
+  )
+
+  const filter = createMegaFilter(collectFilters(plugins, onWarn))
+
+  for (const plugin of plugins) {
+    const wrap = resolveWrapper(plugin.name)
+
+    if (wrap != null) wrap(plugin, filter)
+  }
+}
+
+export function icuMessagesWrapPlugins(options?: Options<Plugin>): Plugin {
   return {
     name: `${basePluginName}:plugins-wrapper`,
     buildStart({ plugins }) {
-      const resolveWrapper = createWrapResolver(
-        options?.wrappers,
-        options?.extendDefaults,
-        this.warn,
-      )
+      wrappingImpl(plugins, options, this.warn)
+    },
+  }
+}
 
-      const filter = createMegaFilter(collectFilters(plugins, this.warn))
-
-      for (const plugin of plugins) {
-        const wrap = resolveWrapper(plugin.name)
-
-        if (wrap != null) wrap(plugin, filter)
-      }
+export function icuMessagesWrapPluginsVite(
+  options?: Options<VitePlugin>,
+): VitePlugin {
+  const name = `${basePluginName}:plugins-wrapper-vite`
+  return {
+    name,
+    configureServer({ config }) {
+      wrappingImpl(config.plugins, options, (logEntry) => {
+        // eslint-disable-next-line no-console
+        console.warn(`[${name}] ${logEntry.code}: ${logEntry.message}`)
+      })
     },
   }
 }

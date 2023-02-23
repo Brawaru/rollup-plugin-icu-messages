@@ -74,7 +74,16 @@
     "pathe": "^1.1.0"
   },
   "peerDependencies": {
-    "rollup": "^3.11.0"
+    "rollup": "^3",
+    "vite": "^4"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    },
+    "rollup": {
+      "optional": false
+    }
   },
   "publishConfig": {
     "access": "public"
