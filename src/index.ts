@@ -7,7 +7,6 @@ import {
 import type { CompileFn } from '@formatjs/cli-lib'
 import { basename } from 'pathe'
 import { normalizeOptions, type Options } from './options.js'
-import { resolveCompileFunction } from './compiling.js'
 import {
   createOptionsResolver,
   type CustomOptionsResolver,
@@ -52,6 +51,13 @@ function icuMessages(options_: Options = {}): Plugin {
     name: basePluginName,
     api: { filter } satisfies API,
     async options() {
+      if (typeof format === 'function') {
+        compileFunc = format
+        return
+      }
+
+      const { resolveCompileFunction } = await import('./compiling.js')
+
       compileFunc = await resolveCompileFunction(format)
 
       return null

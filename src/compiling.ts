@@ -4,7 +4,6 @@ import { resolve } from 'import-meta-resolve'
 import glob_ from 'glob'
 import { basename, dirname, extname } from 'pathe'
 import type { CompileFn } from '@formatjs/cli-lib'
-import type { NormalizedOptions } from './options.js'
 
 const glob = promisify(glob_)
 
@@ -13,10 +12,8 @@ class FormatterResolutionError extends Error {
 }
 
 export async function resolveCompileFunction(
-  input: NormalizedOptions['format'],
+  input: string,
 ): Promise<CompileFn> {
-  if (typeof input === 'function') return input
-
   const defaultFormatters = new Map<string, string>()
 
   let formattersIndexFile: string
