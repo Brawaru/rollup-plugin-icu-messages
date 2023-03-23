@@ -2,6 +2,10 @@
 
 > Transform files containing ICU MessageFormat messages.
 
+## ⚠ Deprecation warning
+
+This package was superseded by [`@vintl/unplugin`](https://npm.im/@vintl/unplugin). It is based on the code of this plugin, but compatible with other loaders like Vite and Webpack by default. This plugin is now deprecated and unmaintained.
+
 ## Summary
 
 This Rollup plugin adds a transform hook that pre-parses all messages in the JSON file into an AST that can be used at runtime without the need to bring in a parser, allowing the bundle size to be reduced. Read more about how this works on the [Format.JS website →](https://formatjs.io/docs/guides/advanced-usage#pre-compiling-messages)
